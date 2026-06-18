@@ -1,0 +1,14 @@
+maps:
+  - name: "constant"
+    type: "constant"
+
+  - name: "luminance"
+    type: "masked"
+    maps:
+      - type: "luminance"
+
+  - name: "partial"
+    type: "masked"
+    maps:
+      - type: "reference"
+      - type: "LinearValue"

@@ -1,0 +1,14 @@
+Pipeline Summary
+==================================================
+Date: 2026-06-18 10:15:28
+Input: <src.utils.ImageStore.ImageStore object at 0x7d2c6a1874d0>
+Maps: demo/lake.yaml
+Reference: 0
+Align: True
+Interpolate: None
+Start: 0.0, End: 2.0
+==================================================
+Frames decoded: 60
+Frames used in fusion: 60
+Frames discarded: 0
+Output saved to: demo/output

@@ -1,0 +1,8 @@
+align: true
+end: 30
+input: <src.utils.ImageStore.ImageStore object at 0x74b9dad72c10>
+interpolate: 2
+maps: demo/lake.yaml
+output: demo/output
+reference: 150
+start: 5
