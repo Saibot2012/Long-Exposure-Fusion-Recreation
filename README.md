@@ -35,15 +35,14 @@ Long-Exposure Fusion is designed to process videos of scenes with slight changes
 
 Without the use of weight maps, a simple mean of all input images yields a dull result with washed out colors and odd trails left by the cars.
 
-![Constant blend of sunset scene](assets/constantCars.png)
+![Constant blend of sunset scene](assets/simple_nyc.png)
 
 Our method is able to treat different objects in the image differently.  
-In this example, we've chosen different weight maps for the sky, the city, and the cars such that:
-- the sky is fused while giving more impact to brighter pixels.
-- the city is captured from sharpest frame.
-- the cars are eliminated from the scene.
+In this example, we've chosen different weight maps for the sky, lake and buildings so that:
+- the sky and laked is fused while giving more impact to brighter pixels.
+- the buildings remains static, taken from the sharpest frame.
 
-![Long-Exposure Fusion of sunset scene](assets/hiddenCars.png)
+![Long-Exposure Fusion of sunset scene](assets/nyc.png)
 
 ## Installation
 
