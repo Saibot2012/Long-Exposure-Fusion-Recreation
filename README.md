@@ -57,7 +57,7 @@ Try using a different environment at your own risk.
 
 First, clone this repository using:
 ```bash
-git clone https://github.com/ThomasMPont/long-exposure-fusion.git
+git clone https://github.com/Saibot2012/Long-Exposure-Fusion-Recreation.git
 cd long-exposure-fusion
 ```
 
