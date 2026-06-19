@@ -227,7 +227,7 @@ __marimo__/
 
 
 external/
-assets/
+
 demo/
 *.mp4
 *.png
