@@ -10,7 +10,7 @@
 
 ### Motivation
 
-Long exposure images are notoriously hard to capture on non-professional equipment.
+Long exposure images are notoriously hard to capture on non-professional equipment, such as equipment without stabilisation etc.
 
 ![Blurry handheld long-exposure shot](assets/clumsyFiltered.jpg)
 
@@ -21,7 +21,7 @@ Furthermore, long-exposure shots are often plagued by unintentional motion-blurr
 ![Long-exposure of train](assets/longExposureTrain.jpg)
 
 Our method is able to selectively apply motion blur to only certain objects in the scene.  
-This is achieved by segmenting each input frame using [SAM 2](https://github.com/facebookresearch/sam2). These segmentations are then used to define hybrid weight maps which determine how each pixel of each frame is scaled before being blended with the full sequence. This process is illustrated in the figure below with the weight maps illustrated in grayscale.
+This is achieved by segmenting each input frame using [Higra](https://github.com/higra/Higra). These segmentations are then used to define hybrid weight maps which determine how each pixel of each frame is scaled before being blended with the full sequence. This process is illustrated in the figure below with the weight maps illustrated in grayscale.
 
 ![Long-Exposure Fusion illustration](assets/longExposureFusion.svg)
 
@@ -40,7 +40,7 @@ Without the use of weight maps, a simple mean of all input images yields a dull 
 Our method is able to treat different objects in the image differently.  
 In this example, we've chosen different weight maps for the sky, the city, and the cars such that:
 - the sky is fused while giving more impact to brighter pixels.
-- the city is captured from a reference frame.
+- the city is captured from sharpest frame.
 - the cars are eliminated from the scene.
 
 ![Long-Exposure Fusion of sunset scene](assets/hiddenCars.png)
@@ -50,7 +50,6 @@ In this example, we've chosen different weight maps for the sky, the city, and t
 ### Disclaimer
 
 This repository is brand new and you may encounter problems before you get everything running.
-Don't hesitate to open a Github issue if you do.
 
 The steps below describe how to install this project on a Linux system with python 3.11.13 and cuda 12.9 and were tested using WSL.
 Try using a different environment at your own risk.
@@ -120,12 +119,12 @@ Download [this model](https://dl.fbaipublicfiles.com/segment_anything_2/092824/s
 You may also use any other of the [pretrained SAM2 models](https://github.com/ThomasMPont/sam2-sequential?tab=readme-ov-file#download-checkpoints).
 If you choose to do so, you'll have to edit the model path in `src/pipeline/segment_picker.py`.
 
-#### FFMPEG
+#### CV2
 
 To decode video inputs, you'll need to install FFMPEG:
 ```bash
 sudo apt update
-sudo apt install ffmpeg
+sudo apt install cv2
 ```
 
 ## Demo
