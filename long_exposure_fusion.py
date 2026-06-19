@@ -1,4 +1,4 @@
-    """
+"""
 long_exposure_fusion.py
 """
 
@@ -26,6 +26,7 @@ import src.pipeline.fuse_images as fuse_images
 import src.pipeline.segment_picker as segment_picker
 from src.pipeline.segment_higra import run_higra_segmenter
 from src.pipeline.segment_picker import MaskLoader
+from src.pipeline.segment_higra import find_sharpest_frame
 
 # ---------------------------------------------------------------------------#
 # Constants
@@ -138,6 +139,8 @@ def run_long_exposure_fusion(
     source.copy_image_to(indexed_filenames[keys[0]], destination, Path("first.png"))
     source.copy_image_to(indexed_filenames[keys[-1]], destination, Path("last.png"))
     source.copy_image_to(indexed_filenames[keys[config.reference_index]], destination, Path("reference.png"))
+    print(f"[DEBUG] reference frame being saved: {keys[config.reference_index]}")
+
     return destination, len(source.get_image_filenames())
 
 # ---------------------------------------------------------------------------#
@@ -246,6 +249,12 @@ def main() -> None:
 
     decoded_count = len(args.input.get_image_filenames())  # save before alignment
     first_frame_index = min(args.input.get_indexed_image_filenames().keys())
+    if args.reference == 0:
+        print("[INFO] Auto-selecting sharpest frame as reference...")
+        args.reference = find_sharpest_frame(args.input)
+        print(f"[INFO] Sharpest frame selected: {args.reference}")
+    else:
+        first_frame_index = min(args.input.get_indexed_image_filenames().keys())
     if args.reference == 0:
         args.reference = first_frame_index
     print(f"[DEBUG] first_frame_index: {first_frame_index}, args.reference: {args.reference}")
