@@ -1,9 +1,11 @@
 [submodule "external/sam2-sequential"]
-	path = external/sam2-sequential
-	url = git@github.com:ThomasMPont/sam2-sequential.git
+    path = external/sam2-sequential
+    url = https://github.com/ThomasMPont/sam2-sequential.git
+
 [submodule "external/Practical-RIFE"]
-	path = external/Practical-RIFE
-	url = git@github.com:ThomasMPont/Practical-RIFE.git
+    path = external/Practical-RIFE
+    url = https://github.com/ThomasMPont/Practical-RIFE.git
+
 [submodule "external/LightGlue"]
-	path = external/LightGlue
-	url = git@github.com:cvg/LightGlue.git
+    path = external/LightGlue
+    url = https://github.com/cvg/LightGlue.git
