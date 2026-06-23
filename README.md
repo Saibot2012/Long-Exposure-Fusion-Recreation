@@ -120,7 +120,7 @@ If you choose to do so, you'll have to edit the model path in `src/pipeline/segm
 
 #### CV2
 
-To decode video inputs, you'll need to install FFMPEG:
+To decode video inputs, you'll need to install CV2:
 ```bash
 sudo apt update
 sudo apt install cv2
@@ -131,40 +131,37 @@ sudo apt install cv2
 Now that you've installed everything, let's try running the main script on an example:
 ```bash
 source venv/bin/activate
-python long_exposure_fusion.py demo/lake.mp4 -m demo/lake.yaml -o demo/output --align --interpolate 2
+python long_exposure_fusion.py demo/timelapse6.mp4 -m demo/lake.yaml -o demo/output --align --interpolate 2
 ```
 In case you've missed installs or encounter errors, intermediate results you've achieved are cached under `.cache/`.
 At any time, you may add the parameter `--clear-cache` to this script to start from scratch.
 
 After running the command above, you should see:
-- FFMPEG decode the input video `demo/lake.mp4`
-- LightGlue align and crop all frames to reference frame 0
-- RIFE interpolate frames to double the framerate
-- The Segment Picker UI open
+- cv2 decode the input video `demo/timelapse6.mp4`
+- LightGlue align and crop all frames to the sharpest frame.
+- RIFE interpolate frames to double the framerate.
+- The Higra segmenter UI open.
 
-In the Segment Picker UI:
-- Select object 0 using the object buttons on the right. We'll only be using a single object in this demo.
-We want this object to segment the lake.
-- Left click on the lake to add a positive point to our object.
-- Right click next to the lake to add a negative point to our object.
-- Add more points if necessary to have SAM2 mask only the lake out.
-If you mess up, press 'c' to clear all points in the frame.
-- Press 'space' to start mask propagation through the video.
-This might take a while, stay hydrated!
-- If the mask is lost during propagation, add more points on intermediate frames.
-You can traverse the sequence using the scroll wheel.
-- Wait for the masks to propagate through to the final frame of the sequence.
-- Close the UI.
+In the Higra segmenter:
+- Click on the areas you want fused and leave the rest empty. 
+For example, we want to fuse the sky in the skyline:
+- Left click on the sky
+- Leave the rest of the area empty.
+- Should you select a wrong area by mistake, simply just right click to deselect the area, or just press CTRL + Z.
+Press Esc after you are done selecting the areas.
 
-Finally, you should see two fused images be created using the maps defined in `demo/lake.yaml`.
+
+After that, the fusing should commence. Take a break while the code does its thing!
 
 Once the script is finished, go check out your results in `demo/output`.  
 `first.png`, `last.png`, and `reference.png` only hold frames of the input.  
-`constant.png` is a simple single weight map fusion of the video.
+`constant.png` is a simple single weight map fusion of the video where everything is given equal weight.
 `partial.png` uses the mask you've defined to selectively blur out the lake without affecting other elements.
-Note that some artifacts arise from the large change in view angle throughout the image sequence.
-Perhaps you'll find a better weight map that solves this issue.
-The next section details how to design and apply your own weight maps.
+`luminance.png` gives the most weight to the green.
+ 
+ The various heatmaps show you the pixels at work:
+ - The left heatmap shows how many pixels was included in the fusion. If all frames are used, the heatmap should show white.
+ - The right heatmap shows the weight that each pixel has. For areas that are fused, the colour should not be too bright, due to averaging of the pixels from all the frames. For areas that are not fused, the colour should be bright because it only has 1 weight, which is taken from the reference frame.
 
 ## Usage
 
@@ -180,19 +177,41 @@ The next section details how to design and apply your own weight maps.
 - `--interpolate <multi>`: Interpolate frames to increase framerate (use sparingly)
 - `--pyramid`: Process weight maps using pyramid decomposition (as done in the original [Exposure Fusion](https://ieeexplore.ieee.org/document/4392748))
 - `--clear-cache`: Clear intermediate results and start from scratch
+- `--start`: To specify the boundary as to where the video starts, should you choose not to use the whole video.
+- `--end`: To specify the boundary as to where the video ends. If not specified, the video will run till the end.
 
-### Segment Picker
+### Higra segmenter
 
-<!-- TODO -->
-(UNFINISHED)
+The higra segmenter, developed by Jean Cousty and other researchers in France, is one of the most important steps in this pipeline. With it, we need not go through individual frames to select the regions needed to be fused.
+![Poster segmented by higra](assets/higra.jpeg)
+
 
 ### Weight Maps
 
 You've reached the core of the project: **weight maps**.
 This section lists which weight maps are available for image fusion and how you can combine them into complex hybrid weight maps.
 
-<!-- TODO -->
-(UNFINISHED)
+Basic (usable as type: x in YAML):
+
+- exposure — contrast × saturation × well-exposedness combined
+- contrast — Laplacian edge response
+- saturation — std deviation across RGB channels
+- wellExposedness — Gaussian centered at mid-brightness (0.5)
+- value — max across RGB channels per pixel
+- linearValue — same as value but after sRGB→linear conversion
+- luminance — perceptual brightness (0.2126R + 0.7152G + 0.0722B)
+- constant — all ones
+
+Composite/special (also usable in YAML):
+
+- masked — blends multiple weight maps using segmentation masks
+- time_lapse — Gaussian temporal decay around a reference frame
+- reference — weight of frame_count on the reference frame, 0 elsewhere
+
+Modifiers (wrap any of the above):
+
+- weight: <float> — scales the output
+- inverse: true — takes 1/output
 
 ## Pipeline
 
@@ -202,7 +221,7 @@ The pipeline is run in `long_exposure_fusion.py`.
 
 ### Decode
 
-If the input is in video form, we first decode it into a sequence of frames using [FFmpeg](https://ffmpeg.org/).
+If the input is in video form, we first decode it into a sequence of frames using [cv2](https://opencv.org/reading-and-writing-videos-using-opencv/).
 
 This is implemented in `src/pipeline/decode_video.py`.
 
@@ -226,11 +245,11 @@ It is implemented in `src/pipeline/interpolate_images.py`.
 
 ### Segment
 
-In order to treat the various sections of our scene differently during fusion, we use [SAM 2](https://github.com/facebookresearch/sam2) to define and propagate segmentation masks across our image sequence.
+In order to treat the various sections of our scene differently during fusion, we use [Higra](https://www.researchgate.net/publication/336390968_Higra_Hierarchical_Graph_Analysis) to define and propagate segmentation masks across our image sequence.
 
-The Segment Picker interface allows us to define masks for any number of objects that are then propagated through the image sequence. These masks will be used to restrict the application of the weight maps we define for our fusion step.
+The Higra Segmenter interface allows us to define masks for any number of objects that are then propagated through the image sequence. These masks will be used to restrict the application of the weight maps we define for our fusion step.
 
-This is implemented in `src/pipeline/segment_picker.py`.
+This is implemented in `src/pipeline/segment_higra.py`.
 
 ### Fusion
 
