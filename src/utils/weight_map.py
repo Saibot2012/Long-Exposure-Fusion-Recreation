@@ -8,9 +8,8 @@ from pathlib import Path
 from abc import ABC, abstractmethod
 from guided_filter_pytorch.guided_filter import GuidedFilter
 import matplotlib.pyplot as plt
-
+import numpy as np
 from src.utils.ImageStore import ImageStore
-from src.pipeline.segment_picker import MaskLoader
 
 # Guided Filter parameters
 DEFAULT_GUIDED_FILTER_RADIUS = 120
@@ -18,6 +17,30 @@ DEFAULT_GUIDED_FILTER_EPSILON = 1e-6
 DEFAULT_GUIDED_FILTER_K = 0.9
 
 DEFAULT_TIME_LAPSE_TAU = 1 # Standard deviation of time lapse decay scaled by frame count
+
+MASKS_DIRNAME = Path("masks/")
+BLENDED_DIRNAME = Path("blended/")
+class MaskLoader:
+    def __init__(self, source: ImageStore):
+        self.source = source
+        self.masks_cache = source.child(MASKS_DIRNAME)
+
+    def load_masks(self, frame_index: int) -> list[np.ndarray]:
+        """
+        Load an 8-bit-per-pixel PNG mask for the given frame index and return (masks, object_ids).
+        Returns:
+            masks: batch of binary torch tensors (H,W), one per object_id (including background 0)
+        """
+        try:
+            mask_id_map = torch.load(self.masks_cache.path / f"{frame_index:06d}.pt", map_location='cpu')
+        except FileNotFoundError:
+            return []
+
+        # Find object count
+        object_count = mask_id_map.max().item()
+        # Convert to PyTorch tensors
+        masks = [(mask_id_map == object_id).unsqueeze(0) for object_id in range(1, object_count + 1)]
+        return masks
 
 class MaskProcessor:
     def __init__(
@@ -315,7 +338,7 @@ class WeightMapGenerator:
         'saturation': SaturationWeightMap,
         'wellExposedness': WellExposednessWeightMap,
         'luminance': LuminanceWeightMap,
-        'linearValue': LinearValueWeightMap,
+        'LinearValue': LinearValueWeightMap,
         'constant': ConstantWeightMap,
         'value': ValueWeightMap,
     }

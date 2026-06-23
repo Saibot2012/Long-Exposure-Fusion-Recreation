@@ -25,7 +25,7 @@ import src.pipeline.interpolate_images as interpolate_images
 import src.pipeline.fuse_images as fuse_images
 import src.pipeline.segment_picker as segment_picker
 from src.pipeline.segment_higra import run_higra_segmenter
-from src.pipeline.segment_picker import MaskLoader
+from src.utils.weight_map import MaskLoader
 from src.pipeline.segment_higra import find_sharpest_frame
 
 # ---------------------------------------------------------------------------#
