@@ -151,7 +151,7 @@ Once the script is finished, go check out your results in `demo/output`.
 
 For example, this is a partial heatmap where the sky was fused:
 ![Partial heatmap](assets/partial.jpeg)
-- As we can see, the left heatmap is white, meaning that all the pixels from all the frames were used in the fusion.
+- As we can see, the `left heatmap` is white, meaning that all the pixels from all the frames were used in the fusion.
 - And the right heatmap shows the buildings being close to yellow because it only has 1 weight, which is from the reference frame. The sky and river are red due to the averaging of pixels, hence the lower weight.
 ## Usage
 
