@@ -1,7 +1,6 @@
 # WSL artifact
 *:Zone.Identifier
 #assets
-assets/
 demo/	
 # Cache directory
 .cache/
@@ -236,3 +235,8 @@ demo/
 *.pkl
 *.yml
 .idea/
+
+demo/output/
+*.log
+__pycache__/
+.ipynb_checkpoints/
