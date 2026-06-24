@@ -134,21 +134,25 @@ For example, we want to fuse the sky in the skyline:
 - Left click on the sky
 - Leave the rest of the area empty.
 - Should you select a wrong area by mistake, simply just right click to deselect the area, or just press CTRL + Z.
-Press Esc after you are done selecting the areas.
+Press 'Q' after you are done selecting the areas.
 
 
 After that, the fusing should commence. Take a break while the code does its thing!
 
 Once the script is finished, go check out your results in `demo/output`.  
-`first.png`, `last.png`, and `reference.png` only hold frames of the input.  
-`constant.png` is a simple single weight map fusion of the video where everything is given equal weight.
-`partial.png` uses the mask you've defined to selectively blur out the lake without affecting other elements.
-`luminance.png` gives the most weight to the green.
+- `first.png`, `last.png`, and `reference.png` only hold frames of the input.  
+- `constant.png` is a simple single weight map fusion of the video where everything is given equal weight.
+- `partial.png` uses the mask you've defined to selectively blur out the lake without affecting other elements.
+- `luminance.png` gives the most weight to the green.
  
  The various heatmaps show you the pixels at work:
  - The left heatmap shows how many pixels was included in the fusion. If all frames are used, the heatmap should show white.
  - The right heatmap shows the weight that each pixel has. For areas that are fused, the colour should not be too bright, due to averaging of the pixels from all the frames. For areas that are not fused, the colour should be bright because it only has 1 weight, which is taken from the reference frame.
 
+For example, this is a partial heatmap where the sky was fused:
+![Partial heatmap](assets/partial.jpeg)
+- As we can see, the left heatmap is white, meaning that all the pixels from all the frames were used in the fusion.
+- And the right heatmap shows the buildings being close to yellow because it only has 1 weight, which is from the reference frame. The sky and river are red due to the averaging of pixels, hence the lower weight.
 ## Usage
 
 ### Parameters
