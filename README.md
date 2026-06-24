@@ -11,7 +11,7 @@
 
 Long exposure images are notoriously hard to capture on non-professional equipment, such as equipment without stabilisation etc.
 
-![Blurry handheld long-exposure shot](assets/clumsyFiltered.jpg)
+![Blurry handheld long-exposure shot](assets/blur.JPG)
 
 Our method allows for the creation of sythetised long-exposure style images using videos or burst image sequences as input.
 
