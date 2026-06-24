@@ -105,19 +105,6 @@ Download [this model](https://drive.google.com/file/d/1ZKjcbmt1hypiFprJPIKW0Tt0l
 `train_log/` into `external/Practical-RIFE/`.  
 You may also use any other of the [pretrained Practical-RIFE models](https://github.com/ThomasMPont/Practical-RIFE#trained-model).
 
-#### SAM2
-
-SAM2 requires compiling a custom CUDA kernel with the nvcc compiler. If it isn't already available on your machine, please install [the CUDA toolkits](https://developer.nvidia.com/cuda-toolkit-archive) with a version that matches your PyTorch CUDA version.
-
-Install SAM2 from the `sam2-sequential` submodule:
-```bash
-pip install -e ./external/sam2-sequential
-```
-
-Download [this model](https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_tiny.pt) and paste the `.pt`file into `external/sam2-sequential/checkpoints/`.  
-You may also use any other of the [pretrained SAM2 models](https://github.com/ThomasMPont/sam2-sequential?tab=readme-ov-file#download-checkpoints).
-If you choose to do so, you'll have to edit the model path in `src/pipeline/segment_picker.py`.
-
 #### CV2
 
 To decode video inputs, you'll need to install CV2:
@@ -193,25 +180,25 @@ This section lists which weight maps are available for image fusion and how you 
 
 Basic (usable as type: x in YAML):
 
-- exposure — contrast × saturation × well-exposedness combined
-- contrast — Laplacian edge response
-- saturation — std deviation across RGB channels
-- wellExposedness — Gaussian centered at mid-brightness (0.5)
-- value — max across RGB channels per pixel
-- linearValue — same as value but after sRGB→linear conversion
-- luminance — perceptual brightness (0.2126R + 0.7152G + 0.0722B)
-- constant — all ones
+- `exposure` : contrast × saturation × well-exposedness combined
+- `contrast` : Laplacian edge response
+- `saturation` : std deviation across RGB channels
+- `wellExposedness` : Gaussian centered at mid-brightness (0.5)
+- `value` : max across RGB channels per pixel
+- `linearValue` : same as value but after sRGB→linear conversion
+- `luminance` : perceptual brightness (0.2126R + 0.7152G + 0.0722B)
+- `constant` : all ones
 
 Composite/special (also usable in YAML):
 
-- masked — blends multiple weight maps using segmentation masks
-- time_lapse — Gaussian temporal decay around a reference frame
-- reference — weight of frame_count on the reference frame, 0 elsewhere
+- `masked` : blends multiple weight maps using segmentation masks
+- `time_lapse` : Gaussian temporal decay around a reference frame
+- `reference` : weight of frame_count on the reference frame, 0 elsewhere
 
 Modifiers (wrap any of the above):
 
-- weight: <float> — scales the output
-- inverse: true — takes 1/output
+- `weight`: <float> — scales the output
+- `inverse`: true — takes 1/output
 
 ## Pipeline
 
