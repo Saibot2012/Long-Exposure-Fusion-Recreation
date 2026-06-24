@@ -85,7 +85,7 @@ pip install torch torchvision
 
 ### Dependencies
 
-This repository depends on forks of [LightGlue](https://github.com/cvg/LightGlue) [Practical-RIFE](https://github.com/ThomasMPont/Practical-RIFE), and [SAM2](https://github.com/ThomasMPont/sam2-sequential).
+This repository depends on forks of [LightGlue](https://github.com/cvg/LightGlue) [Practical-RIFE](https://github.com/ThomasMPont/Practical-RIFE).
 Download them using:
 ```bash
 git submodule update --init
