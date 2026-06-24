@@ -17,7 +17,7 @@ Our method allows for the creation of sythetised long-exposure style images usin
 
 Furthermore, long-exposure shots are often plagued by unintentional motion-blurring of subjects.
 
-![Long-exposure of train](assets/longExposureTrain.jpg)
+![Long-exposure of train](assets/image.png)
 
 Our method is able to selectively apply motion blur to only certain objects in the scene.  
 This is achieved by segmenting each input frame using [Higra](https://github.com/higra/Higra). These segmentations are then used to define hybrid weight maps which determine how each pixel of each frame is scaled before being blended with the full sequence. This process is illustrated in the figure below with the weight maps illustrated in grayscale.
