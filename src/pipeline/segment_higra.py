@@ -15,7 +15,12 @@ import torch
 import higra as hg
 import cv2 as cv
 import matplotlib
-matplotlib.use("TkAgg")
+import matplotlib
+try:
+    matplotlib.use("TkAgg")
+except:
+    matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 import matplotlib.widgets
 from pathlib import Path
